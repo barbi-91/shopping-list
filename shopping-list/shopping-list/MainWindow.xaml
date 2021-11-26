@@ -1,0 +1,141 @@
+﻿<Window x:Class="shopping_list.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:shopping_list"
+        mc:Ignorable="d" 
+
+
+    Title="MainWindow" Height="650" Width="500">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Images/background.jpg"/>
+        </Grid.Background>
+        <!--2 rowa jedan sa shopping dijelom i drugi sa gumbima-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        
+        <!--1 row sa shopping dijelom-->
+        <Grid Grid.Row="0" Margin="50,50,50,0">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Images/paper.jpg"/>
+            </Grid.Background>
+            <!--unutar smedeg papira-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            
+            <!--row naslov-->
+            <Label Grid.Row="0" Content="Shopping Lista" FontSize="20" FontStyle="Italic"
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Padding="0,10,0,10" ></Label>
+
+            <!--row unos-->
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+
+                <Grid VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="210"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Padding="0,10,0,0" 
+                           FontStyle="Italic" FontSize="12">Insert item into shopping list:</Label>
+                    <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Padding="0,10,0,0" 
+                           FontStyle="Italic" FontSize="12">Amount:</Label>
+                    <TextBox x:Name="txtInsertItem" Grid.Row="1" Grid.Column="0" VerticalContentAlignment="Center" SpellCheck.IsEnabled="True"
+                              Language="en-GBS" Background="LightYellow" FontSize="16" Foreground="RosyBrown" Padding="5,0,0,0"></TextBox>
+                    <TextBox  x:Name="txtAmount" Grid.Row="1" Grid.Column="1"  PreviewTextInput="NumberValidationTextBox" 
+                              Width="50" Background="LightYellow" VerticalContentAlignment="Center" FontSize="16"
+                              HorizontalContentAlignment="Center" Foreground="RosyBrown"/>
+                    <!--uinjeti provjeru broja-->
+                    <Button Grid.Row="1"  Grid.Column="2" x:Name="btnAdd" Height="30" Width="70" Content="Add item" Click="btnAdd_Click"
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" Margin="5,0,0,0" ToolTip="Add item in current list">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="RosyBrown" Offset="0.0"/>
+                                <GradientStop Color="LightYellow" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                </Grid>
+            </Grid>
+            <!--row lista prikaza-->
+            
+            <StackPanel Grid.Row="2" VerticalAlignment="Top">
+                <DataGrid x:Name="dgvGrosery" AutoGenerateColumns="False" Height="340" Margin="20" Width="300" Background="Transparent" 
+                              CanUserAddRows="False" SelectionUnit="Cell" SelectedCellsChanged="dgvGrosery_SelectedCellsChanged"
+                              VerticalScrollBarVisibility="Auto" Foreground="Green" FontSize="14" >
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background"
+                                    Value="Transparent"/>
+                        </Style>
+                        
+                    </DataGrid.RowStyle>
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn x:Name="Id" Header="Id" Width="50" CanUserResize="False" Visibility="Hidden" 
+                                                Binding="{Binding Path=Id}" DisplayIndex="0"/>
+                        <DataGridTextColumn x:Name="Amount" Header="Amount" Width="60" CanUserResize="False" CanUserReorder="False" 
+                                                Binding="{Binding Path=Amount}" IsReadOnly="True" DisplayIndex="1"/>
+                        <DataGridTextColumn x:Name="Item" Header=" Grosery item/s" Width="*" MinWidth="20" CanUserResize="False" 
+                                                CanUserReorder="False" Binding="{Binding Path=Item}" IsReadOnly="True" DisplayIndex="2"/>
+                        <DataGridTemplateColumn x:Name="Delete" Header="" Width="50" IsReadOnly="True" DisplayIndex="3" Visibility="Hidden" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="/Images/clear.png" ToolTip="Delete " Width="10" Height="10" x:Name="Delete"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Grid>
+        <!--row 2 sa gumbima-->
+        <StackPanel Grid.Row="1" Margin="50,0,50,30" HorizontalAlignment="Center"
+                    Orientation="Horizontal" Background="Transparent">
+            <!--button1-->
+            <Button x:Name="btnDeleteAll" Height="30" Width="80" Content="Delete List" Click="btnDeleteAll_Click" Margin="5,10,0,0"
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Delete current shopping list">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Green" Offset="0.0"/>
+                        <GradientStop Color="LightYellow" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <!--button2-->
+            <Button x:Name="btnCopyToClipboard" Height="30" Width="80" Content="Copy List" Click="btnCopyToClipboard_Click" Margin="5,10,0,0"
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Copy shopping list to...">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Green" Offset="0.0"/>
+                        <GradientStop Color="LightYellow" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <!--button3-->
+            <Button x:Name="btnSave" Height="30" Width="80" Content="Save List" Click="btnSave_Click" Margin="5,10,0,0"
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Save shopping list to...">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Green" Offset="0.0"/>
+                        <GradientStop Color="LightYellow" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+
+    </Grid>
+</Window>
