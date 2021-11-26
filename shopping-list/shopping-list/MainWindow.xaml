@@ -126,7 +126,7 @@
                 </Button.Background>
             </Button>
             <!--button3-->
-            <Button x:Name="btnSave" Height="30" Width="80" Content="Save List" Click="btnSave_Click" Margin="5,10,0,0"
+            <!--<Button x:Name="btnSave" Height="30" Width="80" Content="Save List" Click="btnSave_Click" Margin="5,10,0,0"
                      Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Save shopping list to...">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -134,7 +134,7 @@
                         <GradientStop Color="LightYellow" Offset="1.0"/>
                     </LinearGradientBrush>
                 </Button.Background>
-            </Button>
+            </Button>-->
         </StackPanel>
 
     </Grid>

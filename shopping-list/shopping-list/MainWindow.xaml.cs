@@ -241,10 +241,10 @@ namespace shopping_list
 
 
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
+        //private void btnSave_Click(object sender, RoutedEventArgs e)
+        //{
 
-        }
+        //}
 
         private void dgvGrosery_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
