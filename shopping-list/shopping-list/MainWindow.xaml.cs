@@ -222,8 +222,6 @@ namespace shopping_list
         private void btnCopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder sbClipboardStringText = new StringBuilder();
-            //sbClipboardStringText.AppendLine("Item\t \tAmount");
-
 
             foreach (object dataItem in dgvGrosery.Items)
             {
@@ -235,22 +233,30 @@ namespace shopping_list
                 string item = (string)drv["Item"];
                 int amount = (int)drv["Amount"];
 
-                sbClipboardStringText.AppendFormat("{0}\t \t {1}\n", item.Trim(), amount);
+                string letterNumber = item.Trim();
+                if (letterNumber.Length >= 7)
+                {
+                    sbClipboardStringText.AppendFormat("{0} \t \t {1}\n", item.Trim(), amount);
+                }
+                else
+                {
+                    sbClipboardStringText.AppendFormat("{0} \t \t \t {1}\n", item.Trim(), amount);
+                }
             }
             
             string result = sbClipboardStringText.ToString();
             Clipboard.SetData(DataFormats.Text, (object)result);
             Paragraph p = new Paragraph();
+            p.Margin = new Thickness(150, 5, 5, 5);
             p.Inlines.Add(result);
             flowDocument.Blocks.Add(p);
+            ClearMaster();
         }
-
+        
 
 
         //private void btnSave_Click(object sender, RoutedEventArgs e)
-        //{
-
-        //}
+        //{          //}
 
         private void dgvGrosery_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
@@ -312,7 +318,8 @@ namespace shopping_list
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder sbClipboardStringText = new StringBuilder();
-            sbClipboardStringText.AppendLine("Shopping List");
+            sbClipboardStringText.AppendLine("Shopping list: ");
+
             foreach (object dataItem in dgvGrosery.Items)
             {
                 var drv = dataItem as DataRowView;
@@ -321,9 +328,9 @@ namespace shopping_list
                 string item = (string)drv["Item"];
                 int amount = (int)drv["Amount"];
 
-                string duljina = item.Trim();
+                string letterNumber = item.Trim();
                 
-                if (duljina.Length >= 9)
+                if (letterNumber.Length >= 9)
                 {
                     sbClipboardStringText.AppendFormat("{0} \t \t {1}\n", item.Trim(), amount);
                 }
@@ -334,7 +341,8 @@ namespace shopping_list
             }
 
             string result = sbClipboardStringText.ToString();
-           
+            //Clipboard.SetData(DataFormats.Text, (object)result);
+
             Paragraph p = new Paragraph();
             p.Margin = new Thickness(150, 5, 5, 5);
             p.Inlines.Add(result);
@@ -350,8 +358,10 @@ namespace shopping_list
 
             pd.PrintDocument(idocument.DocumentPaginator, "Printing Flow Document...");
 
-           
+            ClearMaster();
+
         }
     }
 }
+
 

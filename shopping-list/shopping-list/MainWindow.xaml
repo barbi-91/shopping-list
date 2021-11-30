@@ -32,7 +32,7 @@
             
             <!--row naslov-->
             <Label Grid.Row="0" Content="Shopping Lista" FontSize="20" FontStyle="Italic"
-                   HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Padding="0,10,0,10" ></Label>
+                   HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Padding="0,10,0,0" ></Label>
 
             <!--row unos-->
             <Grid Grid.Row="1" HorizontalAlignment="Center">
@@ -73,7 +73,7 @@
             <!--row lista prikaza-->
             
             <StackPanel Grid.Row="2" VerticalAlignment="Top">
-                <DataGrid x:Name="dgvGrosery" AutoGenerateColumns="False" Height="40" Margin="49,20,44.333,20" Width="300" Background="Transparent" 
+                <DataGrid x:Name="dgvGrosery" AutoGenerateColumns="False" Height="340" Margin="49,20,44.333,20" Width="300" Background="Transparent" 
                               CanUserAddRows="False" SelectionUnit="Cell" SelectedCellsChanged="dgvGrosery_SelectedCellsChanged"
                               VerticalScrollBarVisibility="Auto" Foreground="Green" FontSize="14" >
                     <DataGrid.RowStyle>
@@ -102,7 +102,7 @@
                 </DataGrid>
 
 
-                <Grid Background="Wheat">
+                <Grid Background="Wheat" Visibility="Hidden">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.9*" />
                         <RowDefinition Height="0.2*"/>
@@ -110,10 +110,8 @@
 
                     <FlowDocumentReader Grid.Row="0">
                         <FlowDocument Name="flowDocument">
-                            <Paragraph  FontSize="20" TextAlignment="Center" Margin="50"
+                            <Paragraph FontSize="20" TextAlignment="Center" Margin="150"
                                 FontWeight="Bold" >Shopping List</Paragraph>
-                            
-
                         </FlowDocument>
                     </FlowDocumentReader>
                 </Grid>
@@ -146,7 +144,7 @@
             </Button>
             <!--button3-->
             <Button x:Name="btnPrint" Height="30" Width="60" Content="Print" Click="btnPrint_Click" Margin="5,10,0,0"
-                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Save shopping list to...">
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Print shopping list to...">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                         <GradientStop Color="Green" Offset="0.0"/>
