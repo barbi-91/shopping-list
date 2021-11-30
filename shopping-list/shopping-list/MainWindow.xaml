@@ -7,7 +7,7 @@
         mc:Ignorable="d" 
 
 
-    Title="MainWindow" Height="650" Width="500">
+    Title="MainWindow" Height="650" Width="520">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/Images/background.jpg"/>
@@ -73,7 +73,7 @@
             <!--row lista prikaza-->
             
             <StackPanel Grid.Row="2" VerticalAlignment="Top">
-                <DataGrid x:Name="dgvGrosery" AutoGenerateColumns="False" Height="340" Margin="20" Width="300" Background="Transparent" 
+                <DataGrid x:Name="dgvGrosery" AutoGenerateColumns="False" Height="40" Margin="49,20,44.333,20" Width="300" Background="Transparent" 
                               CanUserAddRows="False" SelectionUnit="Cell" SelectedCellsChanged="dgvGrosery_SelectedCellsChanged"
                               VerticalScrollBarVisibility="Auto" Foreground="Green" FontSize="14" >
                     <DataGrid.RowStyle>
@@ -97,9 +97,28 @@
                                     <Image Source="/Images/clear.png" ToolTip="Delete " Width="10" Height="10" x:Name="Delete"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                        </DataGridTemplateColumn> 
                     </DataGrid.Columns>
                 </DataGrid>
+
+
+                <Grid Background="Wheat">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.9*" />
+                        <RowDefinition Height="0.2*"/>
+                    </Grid.RowDefinitions>
+
+                    <FlowDocumentReader Grid.Row="0">
+                        <FlowDocument Name="flowDocument">
+                            <Paragraph  FontSize="20" TextAlignment="Center" Margin="50"
+                                FontWeight="Bold" >Shopping List</Paragraph>
+                            
+
+                        </FlowDocument>
+                    </FlowDocumentReader>
+                </Grid>
+
+
             </StackPanel>
         </Grid>
         <!--row 2 sa gumbima-->
@@ -126,7 +145,7 @@
                 </Button.Background>
             </Button>
             <!--button3-->
-            <!--<Button x:Name="btnSave" Height="30" Width="80" Content="Save List" Click="btnSave_Click" Margin="5,10,0,0"
+            <Button x:Name="btnPrint" Height="30" Width="60" Content="Print" Click="btnPrint_Click" Margin="5,10,0,0"
                      Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Save shopping list to...">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -134,7 +153,7 @@
                         <GradientStop Color="LightYellow" Offset="1.0"/>
                     </LinearGradientBrush>
                 </Button.Background>
-            </Button>-->
+            </Button>
         </StackPanel>
 
     </Grid>

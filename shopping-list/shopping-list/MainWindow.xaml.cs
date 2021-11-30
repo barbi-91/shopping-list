@@ -128,6 +128,7 @@ namespace shopping_list
                 GetData();
                 GroseryId = 0;
                 BindingGrosery();
+                flowDocument.Blocks.Clear();
                 txtInsertItem.Focus();
 
 
@@ -205,6 +206,8 @@ namespace shopping_list
                     //dgvGrosery.ItemsSource = null;
                     txtInsertItem.Focus();
                     GetData();
+                    flowDocument.Blocks.Clear();
+
                 }
             }
             catch (Exception ex)
@@ -234,9 +237,12 @@ namespace shopping_list
 
                 sbClipboardStringText.AppendFormat("{0}\t \t {1}\n", item.Trim(), amount);
             }
-
+            
             string result = sbClipboardStringText.ToString();
             Clipboard.SetData(DataFormats.Text, (object)result);
+            Paragraph p = new Paragraph();
+            p.Inlines.Add(result);
+            flowDocument.Blocks.Add(p);
         }
 
 
@@ -301,6 +307,50 @@ namespace shopping_list
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void btnPrint_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder sbClipboardStringText = new StringBuilder();
+            sbClipboardStringText.AppendLine("Shopping List");
+            foreach (object dataItem in dgvGrosery.Items)
+            {
+                var drv = dataItem as DataRowView;
+
+                int id = (int)drv["Id"];
+                string item = (string)drv["Item"];
+                int amount = (int)drv["Amount"];
+
+                string duljina = item.Trim();
+                
+                if (duljina.Length >= 9)
+                {
+                    sbClipboardStringText.AppendFormat("{0} \t \t {1}\n", item.Trim(), amount);
+                }
+                else
+                {
+                    sbClipboardStringText.AppendFormat("{0} \t \t \t {1}\n", item.Trim(), amount);
+                }
+            }
+
+            string result = sbClipboardStringText.ToString();
+           
+            Paragraph p = new Paragraph();
+            p.Margin = new Thickness(150, 5, 5, 5);
+            p.Inlines.Add(result);
+            flowDocument.Blocks.Add(p);
+
+            PrintDialog pd = new PrintDialog();
+            if (pd.ShowDialog() != true) return;
+
+            flowDocument.PageHeight = pd.PrintableAreaHeight;
+            flowDocument.PageWidth = pd.PrintableAreaWidth;
+
+            IDocumentPaginatorSource idocument = flowDocument as IDocumentPaginatorSource;
+
+            pd.PrintDocument(idocument.DocumentPaginator, "Printing Flow Document...");
+
+           
         }
     }
 }
