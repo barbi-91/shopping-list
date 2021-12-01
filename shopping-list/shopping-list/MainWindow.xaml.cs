@@ -17,7 +17,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Printing;
-
+using System.IO;
+using Microsoft.Win32;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace shopping_list
 {
@@ -82,7 +84,7 @@ namespace shopping_list
                             mycon();
                             DataTable dt = new DataTable();
                             cmd = new SqlCommand("UPDATE ItemsDb SET Amount = @Amount, Item = @Item WHERE Id = @Id", con);
-                            cmd.CommandType = CommandType.Text; 
+                            cmd.CommandType = CommandType.Text;
                             cmd.Parameters.AddWithValue("@Id", GroseryId);
                             cmd.Parameters.AddWithValue("@Amount", txtAmount.Text);
                             cmd.Parameters.AddWithValue("@Item", txtInsertItem.Text);
@@ -104,11 +106,11 @@ namespace shopping_list
                         cmd.ExecuteNonQuery();
                         con.Close();
                     }
-                    
+
                 }
                 ClearMaster();
                 Delete.Visibility = Visibility.Hidden;
-                
+
             }
 
             catch (Exception ex)
@@ -243,7 +245,7 @@ namespace shopping_list
                     sbClipboardStringText.AppendFormat("{0} \t \t \t {1}\n", item.Trim(), amount);
                 }
             }
-            
+
             string result = sbClipboardStringText.ToString();
             Clipboard.SetData(DataFormats.Text, (object)result);
             Paragraph p = new Paragraph();
@@ -252,11 +254,7 @@ namespace shopping_list
             flowDocument.Blocks.Add(p);
             ClearMaster();
         }
-        
 
-
-        //private void btnSave_Click(object sender, RoutedEventArgs e)
-        //{          //}
 
         private void dgvGrosery_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
@@ -279,7 +277,7 @@ namespace shopping_list
                                 txtAmount.Text = row_selected["Amount"].ToString();
 
                                 txtInsertItem.Text = row_selected["Item"].ToString();
-                                btnAdd.Content = "Update"; 
+                                btnAdd.Content = "Update";
                             }
 
                             if (grd.SelectedCells[0].Column.DisplayIndex == 3)
@@ -318,7 +316,7 @@ namespace shopping_list
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder sbClipboardStringText = new StringBuilder();
-            sbClipboardStringText.AppendLine("Shopping list: ");
+            sbClipboardStringText.AppendLine("Shopping list:\n \b ");
 
             foreach (object dataItem in dgvGrosery.Items)
             {
@@ -329,7 +327,7 @@ namespace shopping_list
                 int amount = (int)drv["Amount"];
 
                 string letterNumber = item.Trim();
-                
+
                 if (letterNumber.Length >= 9)
                 {
                     sbClipboardStringText.AppendFormat("{0} \t \t {1}\n", item.Trim(), amount);
@@ -361,7 +359,42 @@ namespace shopping_list
             ClearMaster();
 
         }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+
+            StringBuilder sbClipboardStringText = new StringBuilder();
+
+            //sbClipboardStringText.AppendLine("Shopping list: ");
+
+            foreach (object dataItem in dgvGrosery.Items)
+            {
+                var drv = dataItem as DataRowView;
+
+                int id = (int)drv["Id"];
+                string item = (string)drv["Item"];
+                int amount = (int)drv["Amount"];
+
+                string itemTrim = item.Trim();
+                sbClipboardStringText.AppendFormat("{1}\t{0}\n", itemTrim, amount);
+
+            }
+
+            string result = sbClipboardStringText.ToString();
+            var savedlg = new SaveFileDialog();
+            
+            
+            savedlg.DefaultExt = "doc";
+            savedlg.Filter = "Document file (*.doc)|*.doc|Text file (*.txt)|*.txt| Excel file (*.xls) | *.xls| All files(*.*) | *.* ";
+            //savedlg.InitialDirectory = @"C:\Users\Korisnik\Desktop\proba";
+            savedlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if (savedlg.ShowDialog() == true)
+                File.WriteAllText(savedlg.FileName, result);
+            
+        }
     }
 }
+
 
 

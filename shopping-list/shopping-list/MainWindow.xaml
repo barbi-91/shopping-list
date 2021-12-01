@@ -123,7 +123,7 @@
         <StackPanel Grid.Row="1" Margin="50,0,50,30" HorizontalAlignment="Center"
                     Orientation="Horizontal" Background="Transparent">
             <!--button1-->
-            <Button x:Name="btnDeleteAll" Height="30" Width="80" Content="Delete List" Click="btnDeleteAll_Click" Margin="5,10,0,0"
+            <Button x:Name="btnDeleteAll" Height="30" Width="80" Content="Delete List" Click="btnDeleteAll_Click" Margin="5,10,10,0"
                      Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Delete current shopping list">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -143,6 +143,16 @@
                 </Button.Background>
             </Button>
             <!--button3-->
+            <Button x:Name="btnSave" Height="30" Width="80" Content="Save List" Click="btnSave_Click" Margin="10,10,10,0"
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Print shopping list to...">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="Green" Offset="0.0"/>
+                        <GradientStop Color="LightYellow" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <!--button4-->
             <Button x:Name="btnPrint" Height="30" Width="60" Content="Print" Click="btnPrint_Click" Margin="5,10,0,0"
                      Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Print shopping list to...">
                 <Button.Background>
@@ -152,6 +162,8 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
+
+
         </StackPanel>
 
     </Grid>
