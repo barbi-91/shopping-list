@@ -28,12 +28,12 @@ namespace shopping_list
     /// </summary>
     public partial class MainWindow : Window
     {
-        //objects 
-        SqlConnection con = new SqlConnection(); //alow to create connection to db (access to table-we make connection)
+        #region Fields
+        SqlConnection con = new SqlConnection(); // Allow to create connection to db (access to table-we make connection)
         SqlCommand cmd = new SqlCommand();
-        SqlDataAdapter da = new SqlDataAdapter();// comunicate data in correct format
-
+        SqlDataAdapter da = new SqlDataAdapter(); // Communicate data in correct format
         private int GroseryId = 0;
+        #endregion Fields
 
         public MainWindow()
         {
@@ -42,22 +42,116 @@ namespace shopping_list
             GetData();
             ClearMaster();
         }
-
-
-        //metoda za string konekciju i otvaranje
+        
+        #region Method
+        // Method - string connection opening
         public void mycon()
         {
             String Conn = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             con = new SqlConnection(Conn);
             con.Open();
         }
-        //validacija numerickih brojava
+
+        // Method - Validation numeric number
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
-        //gumbic za dodavanje na listu
+
+        // Method - Clear 
+        private void ClearMaster()
+        {
+            try
+            {
+                txtInsertItem.Text = string.Empty;
+                txtAmount.Text = string.Empty;
+                btnAdd.Content = "Add item";
+                GetData();
+                GroseryId = 0;
+                BindingGrosery();
+                flowDocument.Blocks.Clear();
+                txtInsertItem.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Method - Binding data from database to the table
+        private void BindingGrosery()
+        {
+            mycon();
+            DataTable dt = new DataTable();
+            cmd = new SqlCommand("SELECT Id, Amount, Item FROM ItemsDb", con);
+            cmd.CommandType = CommandType.Text;
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            // Creating a table to load data from the database
+            DataRow newRow = dt.NewRow();
+            newRow["Id"] = 0;
+            newRow["Item"] = "--insert item--";
+            dt.Rows.InsertAt(newRow, 0);
+            con.Close();
+        }
+
+        // Method - Get data from Database
+        public void GetData()
+        {
+            mycon();
+            DataTable dt = new DataTable();
+            cmd = new SqlCommand("SELECT * FROM ItemsDb ", con);
+            cmd.CommandType = CommandType.Text;
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                dgvGrosery.ItemsSource = dt.DefaultView;
+            }
+            else
+            {
+                dgvGrosery.ItemsSource = null;
+            }
+            con.Close();
+        }
+
+        // Method Delete All
+        private void DeleteAll()
+        {
+            try
+            {
+                if (MessageBox.Show("Are you sure you want delete all?", "Information", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    txtInsertItem.Text = string.Empty;
+                    txtAmount.Text = string.Empty;
+                    mycon();
+                    DataTable dt = new DataTable();
+                    cmd = new SqlCommand("DELETE FROM ItemsDb", con);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("Shopping list deleted successfully!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    txtInsertItem.Focus();
+                    GetData();
+                    flowDocument.Blocks.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion Method
+
+        #region Event 
+        // Button - Delete All
+        private void btnDeleteAll_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteAll();
+        }
+
+        // Button - Add item
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -80,7 +174,7 @@ namespace shopping_list
                     {
                         if (MessageBox.Show($"Update item: {txtInsertItem.Text}", "Information", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            //update
+                            // Update
                             mycon();
                             DataTable dt = new DataTable();
                             cmd = new SqlCommand("UPDATE ItemsDb SET Amount = @Amount, Item = @Item WHERE Id = @Id", con);
@@ -96,7 +190,7 @@ namespace shopping_list
                     }
                     else
                     {
-                        //add
+                        // Add
                         mycon();
                         DataTable dt = new DataTable();
                         cmd = new SqlCommand("INSERT INTO ItemsDb(Item, Amount) VALUES(@Item, @Amount)", con);
@@ -110,30 +204,6 @@ namespace shopping_list
                 }
                 ClearMaster();
                 Delete.Visibility = Visibility.Hidden;
-
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-
-        private void ClearMaster()
-        {
-            try
-            {
-                txtInsertItem.Text = string.Empty;
-                txtAmount.Text = string.Empty;
-                btnAdd.Content = "Add item";
-                GetData();
-                GroseryId = 0;
-                BindingGrosery();
-                flowDocument.Blocks.Clear();
-                txtInsertItem.Focus();
-
-
             }
             catch (Exception ex)
             {
@@ -141,100 +211,17 @@ namespace shopping_list
             }
         }
 
-        //ispisivanje(povezivanje) svega iz baze u tablicu
-        private void BindingGrosery()
-        {
-
-            mycon();
-            DataTable dt = new DataTable();
-            cmd = new SqlCommand("SELECT Id, Amount, Item FROM ItemsDb", con);
-            cmd.CommandType = CommandType.Text;
-            da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-            //stvaranje tablice u koju ce se spremiti to sa baze
-            DataRow newRow = dt.NewRow();
-            newRow["Id"] = 0;
-            newRow["Item"] = "--insert item--";
-            dt.Rows.InsertAt(newRow, 0);
-
-
-
-            con.Close();
-
-        }
-        public void GetData()
-        {
-            mycon();
-            DataTable dt = new DataTable();
-            cmd = new SqlCommand("SELECT * FROM ItemsDb ", con);
-            cmd.CommandType = CommandType.Text;
-            da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                dgvGrosery.ItemsSource = dt.DefaultView;
-            }
-            else
-            {
-                dgvGrosery.ItemsSource = null;
-            }
-            con.Close();
-        }
-
-
-        private void btnDeleteAll_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteAll();
-        }
-
-        private void DeleteAll()
-        {
-            try
-            {
-                if (MessageBox.Show("Are you sure you want delete all?", "Information", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    txtInsertItem.Text = string.Empty;
-                    txtAmount.Text = string.Empty;
-
-                    mycon();
-                    DataTable dt = new DataTable();
-                    cmd = new SqlCommand("DELETE FROM ItemsDb", con);
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    MessageBox.Show("Shopping list deleted successfully!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    //dgvGrosery.ItemsSource = null;
-                    txtInsertItem.Focus();
-                    GetData();
-                    flowDocument.Blocks.Clear();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-
-
-
+        //Button - Copy
         private void btnCopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder sbClipboardStringText = new StringBuilder();
-
             foreach (object dataItem in dgvGrosery.Items)
             {
-                //System.Diagnostics.Debug.WriteLine(dataItem.GetType().FullName);
-
+                // System.Diagnostics.Debug.WriteLine(dataItem.GetType().FullName);
                 var drv = dataItem as DataRowView;
-
                 int id = (int)drv["Id"];
                 string item = (string)drv["Item"];
                 int amount = (int)drv["Amount"];
-
                 string letterNumber = item.Trim();
                 if (letterNumber.Length >= 7)
                 {
@@ -245,7 +232,6 @@ namespace shopping_list
                     sbClipboardStringText.AppendFormat("{0} \t \t \t {1}\n", item.Trim(), amount);
                 }
             }
-
             string result = sbClipboardStringText.ToString();
             Clipboard.SetData(DataFormats.Text, (object)result);
             Paragraph p = new Paragraph();
@@ -255,16 +241,14 @@ namespace shopping_list
             ClearMaster();
         }
 
-
+        //Button - Selected cell Changed
         private void dgvGrosery_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             try
             {
                 Delete.Visibility = Visibility.Visible;
-
                 DataGrid grd = (DataGrid)sender;
                 DataRowView row_selected = grd.CurrentItem as DataRowView;
-
                 if (row_selected != null)
                 {
                     if (dgvGrosery.Items.Count > 0)
@@ -275,7 +259,6 @@ namespace shopping_list
                             if (grd.SelectedCells[0].Column.DisplayIndex == 1 || grd.SelectedCells[0].Column.DisplayIndex == 2)
                             {
                                 txtAmount.Text = row_selected["Amount"].ToString();
-
                                 txtInsertItem.Text = row_selected["Item"].ToString();
                                 btnAdd.Content = "Update";
                             }
@@ -284,23 +267,18 @@ namespace shopping_list
                             {
                                 txtAmount.Text = row_selected["Amount"].ToString();
                                 txtInsertItem.Text = row_selected["Item"].ToString();
-
                                 if (MessageBox.Show($"Delete item: {txtInsertItem.Text}", "Information", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 {
                                     mycon();
                                     DataTable dt = new DataTable();
-
                                     cmd = new SqlCommand("DELETE FROM ItemsDb WHERE Id = @Id", con);
                                     cmd.CommandType = CommandType.Text;
-
                                     cmd.Parameters.AddWithValue("@Id", GroseryId);
                                     cmd.ExecuteNonQuery();
                                     con.Close();
-
                                     MessageBox.Show("Item deleted successfully", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                                     ClearMaster();
                                     Delete.Visibility = Visibility.Hidden;
-
                                 }
                             }
                         }
@@ -313,21 +291,18 @@ namespace shopping_list
             }
         }
 
+        //Button - Print
         private void btnPrint_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder sbClipboardStringText = new StringBuilder();
             sbClipboardStringText.AppendLine("Shopping list:\n \b ");
-
             foreach (object dataItem in dgvGrosery.Items)
             {
                 var drv = dataItem as DataRowView;
-
                 int id = (int)drv["Id"];
                 string item = (string)drv["Item"];
                 int amount = (int)drv["Amount"];
-
                 string letterNumber = item.Trim();
-
                 if (letterNumber.Length >= 9)
                 {
                     sbClipboardStringText.AppendFormat("{0} \t \t {1}\n", item.Trim(), amount);
@@ -337,9 +312,7 @@ namespace shopping_list
                     sbClipboardStringText.AppendFormat("{0} \t \t \t {1}\n", item.Trim(), amount);
                 }
             }
-
             string result = sbClipboardStringText.ToString();
-            //Clipboard.SetData(DataFormats.Text, (object)result);
 
             Paragraph p = new Paragraph();
             p.Margin = new Thickness(150, 5, 5, 5);
@@ -348,51 +321,51 @@ namespace shopping_list
 
             PrintDialog pd = new PrintDialog();
             if (pd.ShowDialog() != true) return;
-
             flowDocument.PageHeight = pd.PrintableAreaHeight;
             flowDocument.PageWidth = pd.PrintableAreaWidth;
 
             IDocumentPaginatorSource idocument = flowDocument as IDocumentPaginatorSource;
-
             pd.PrintDocument(idocument.DocumentPaginator, "Printing Flow Document...");
-
             ClearMaster();
 
         }
 
+        // Button - Save
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-
             StringBuilder sbClipboardStringText = new StringBuilder();
-
-            //sbClipboardStringText.AppendLine("Shopping list: ");
-
             foreach (object dataItem in dgvGrosery.Items)
             {
                 var drv = dataItem as DataRowView;
-
                 int id = (int)drv["Id"];
                 string item = (string)drv["Item"];
                 int amount = (int)drv["Amount"];
-
                 string itemTrim = item.Trim();
                 sbClipboardStringText.AppendFormat("{1}\t{0}\n", itemTrim, amount);
-
             }
-
             string result = sbClipboardStringText.ToString();
             var savedlg = new SaveFileDialog();
-            
-            
             savedlg.DefaultExt = "doc";
             savedlg.Filter = "Document file (*.doc)|*.doc|Text file (*.txt)|*.txt| Excel file (*.xls) | *.xls| All files(*.*) | *.* ";
-            //savedlg.InitialDirectory = @"C:\Users\Korisnik\Desktop\proba";
             savedlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
             if (savedlg.ShowDialog() == true)
                 File.WriteAllText(savedlg.FileName, result);
-            
         }
+
+        //Button - About
+        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var aboutWindow = new AboutWindow();
+                aboutWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion Event
     }
 }
 
