@@ -12,37 +12,31 @@
         <Grid.Background>
             <ImageBrush ImageSource="/Images/background.jpg"/>
         </Grid.Background>
-        <!--2 rowa jedan sa shopping dijelom i drugi sa gumbima-->
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
-        
-        <!--1 row sa shopping dijelom-->
+
         <Grid Grid.Row="0" Margin="50,50,50,0">
             <Grid.Background>
                 <ImageBrush ImageSource="/Images/paper.jpg"/>
             </Grid.Background>
-            <!--unutar smedeg papira-->
+            <!--content-->
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
-            <!--row naslov-->
+
             <Label Grid.Row="0" Content="Shopping List" FontSize="20" FontStyle="Italic"
                    HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" Padding="0,10,0,0" ></Label>
-
-            <!--row unos-->
+            <!--row -insert part-->
             <Grid Grid.Row="1" HorizontalAlignment="Center">
-
                 <Grid VerticalAlignment="Top">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
-
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="210"/>
                         <ColumnDefinition Width="auto"/>
@@ -58,7 +52,7 @@
                     <TextBox  x:Name="txtAmount" Grid.Row="1" Grid.Column="1"  PreviewTextInput="NumberValidationTextBox" 
                               Width="50" Background="LightYellow" VerticalContentAlignment="Center" FontSize="16"
                               HorizontalContentAlignment="Center" Foreground="RosyBrown"/>
-                    <!--uinjeti provjeru broja-->
+                    <!--Validation numeric number-->
                     <Button Grid.Row="1"  Grid.Column="2" x:Name="btnAdd" Height="30" Width="70" Content="Add item" Click="btnAdd_Click"
                      Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" Margin="5,0,0,0" ToolTip="Add item in current list">
                         <Button.Background>
@@ -70,8 +64,7 @@
                     </Button>
                 </Grid>
             </Grid>
-            <!--row lista prikaza-->
-            
+            <!--row -display list-->
             <StackPanel Grid.Row="2" VerticalAlignment="Top">
                 <DataGrid x:Name="dgvGrosery" AutoGenerateColumns="False" Height="340" Margin="49,20,44.333,20" Width="300" Background="Transparent" 
                               CanUserAddRows="False" SelectionUnit="Cell" SelectedCellsChanged="dgvGrosery_SelectedCellsChanged"
@@ -81,9 +74,7 @@
                             <Setter Property="Background"
                                     Value="Transparent"/>
                         </Style>
-                        
                     </DataGrid.RowStyle>
-                    
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="Id" Header="Id" Width="50" CanUserResize="False" Visibility="Hidden" 
                                                 Binding="{Binding Path=Id}" DisplayIndex="0"/>
@@ -97,11 +88,9 @@
                                     <Image Source="/Images/clear.png" ToolTip="Delete " Width="10" Height="10" x:Name="Delete"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn> 
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-
-
                 <Grid Background="Wheat" Visibility="Hidden">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.9*" />
@@ -115,11 +104,9 @@
                         </FlowDocument>
                     </FlowDocumentReader>
                 </Grid>
-
-
             </StackPanel>
         </Grid>
-        <!--row 2 sa gumbima-->
+        <!--row 2 button part-->
         <StackPanel Grid.Row="1" Margin="50,0,50,30" HorizontalAlignment="Center"
                     Orientation="Horizontal" Background="Transparent">
             <!--button1-->
@@ -144,7 +131,7 @@
             </Button>
             <!--button3-->
             <Button x:Name="btnSave" Height="30" Width="80" Content="Save List" Click="btnSave_Click" Margin="5,10,0,0"
-                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Print shopping list">
+                     Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="Save shopping list to...">
                 <Button.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                         <GradientStop Color="Green" Offset="0.0"/>
@@ -162,7 +149,6 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            
             <!--button5-->
             <Button x:Name="btnAbout" Height="30" Width="60" Content="About" Click="btnAbout_Click" Margin="5,10,5,0" 
                      Foreground="Black" FontSize="14" Style="{StaticResource ButtonRound}" ToolTip="About and help">
@@ -173,8 +159,6 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-
         </StackPanel>
-
     </Grid>
 </Window>

@@ -217,7 +217,6 @@ namespace shopping_list
             StringBuilder sbClipboardStringText = new StringBuilder();
             foreach (object dataItem in dgvGrosery.Items)
             {
-                // System.Diagnostics.Debug.WriteLine(dataItem.GetType().FullName);
                 var drv = dataItem as DataRowView;
                 int id = (int)drv["Id"];
                 string item = (string)drv["Item"];
@@ -241,7 +240,7 @@ namespace shopping_list
             ClearMaster();
         }
 
-        //Button - Selected cell Changed
+        //Button - Selected cell Changed -Edit content
         private void dgvGrosery_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             try
