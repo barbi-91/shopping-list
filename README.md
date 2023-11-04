@@ -1,5 +1,5 @@
 # shopping-list
-Make a Great Grocery List in Minutes
+Make a Grocery List 
 
 Barbara Erdec Golović
 
